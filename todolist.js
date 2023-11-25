@@ -1,7 +1,7 @@
 const express = require("express");
 const { ApolloServer, gql } = require("apollo-server-express");
 const mongoose = require("mongoose");
-
+const cors = require("cors");
 const app = express();
 
 // 3. 定义GraphQL Schema
@@ -90,3 +90,5 @@ startServer().then(() => {
     );
   });
 });
+
+app.use(cors());
