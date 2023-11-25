@@ -82,7 +82,7 @@ async function startServer() {
 }
 
 // 9. 启动Express服务器
-const PORT = 3000;
+const PORT = process.env.PORT || 3000; // 使用Vercel分配的端口或者3000端口
 startServer().then(() => {
   app.listen(PORT, () => {
     console.log(
