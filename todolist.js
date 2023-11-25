@@ -58,18 +58,18 @@ const resolvers = {
 };
 
 // 5. 连接到 MongoDB 数据库
-mongoose.connect(
-  "mongodb+srv://ray10315332:GayqbQeJq5Jxh3em@cluster0.pberq7k.mongodb.net/",
-  {
-    useUnifiedTopology: true,
-  }
-);
+// mongoose.connect(
+//   "mongodb+srv://ray10315332:GayqbQeJq5Jxh3em@cluster0.pberq7k.mongodb.net/",
+//   {
+//     useUnifiedTopology: true,
+//   }
+// );
 
 // 6. 定义 Todo 模型
-const Todo = mongoose.model("Todo", {
-  task: String,
-  completed: Boolean,
-});
+// const Todo = mongoose.model("Todo", {
+//   task: String,
+//   completed: Boolean,
+// });
 
 // 7. 创建Apollo服务器
 const server = new ApolloServer({ typeDefs, resolvers, cache: "bounded" });
