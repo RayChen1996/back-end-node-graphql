@@ -1,98 +1,4 @@
-// const express = require("express");
-// const { ApolloServer, gql } = require("apollo-server-express");
-// const mongoose = require("mongoose");
-// const cors = require("cors");
-// const app = express();
-
-// // 3. 定义GraphQL Schema
-// const typeDefs = gql`
-//   type Todo {
-//     id: ID!
-//     task: String!
-//     completed: Boolean!
-//   }
-
-//   type Query {
-//     todos: [Todo]
-//     todo(id: ID!): Todo
-//   }
-
-//   type Mutation {
-//     addTodo(task: String!): Todo
-//     updateTodo(id: ID!, task: String!, completed: Boolean!): Todo
-//     deleteTodo(id: ID!): Todo
-//   }
-// `;
-
-// // 4. 提供解析函数
-// const resolvers = {
-//   Query: {
-//     todos: async () => {
-//       const todos = await Todo.find();
-//       return todos;
-//     },
-//     todo: async (_, { id }) => {
-//       const todo = await Todo.findById(id);
-//       return todo;
-//     },
-//   },
-//   Mutation: {
-//     addTodo: async (_, { task }) => {
-//       const todo = new Todo({ task, completed: false });
-//       await todo.save();
-//       return todo;
-//     },
-//     updateTodo: async (_, { id, task, completed }) => {
-//       const todo = await Todo.findByIdAndUpdate(
-//         id,
-//         { task, completed },
-//         { new: true }
-//       );
-//       return todo;
-//     },
-//     deleteTodo: async (_, { id }) => {
-//       const todo = await Todo.findByIdAndDelete(id);
-//       return todo;
-//     },
-//   },
-// };
-
-// // 5. 连接到 MongoDB 数据库
-// // mongoose.connect(
-// //   "mongodb+srv://ray10315332:GayqbQeJq5Jxh3em@cluster0.pberq7k.mongodb.net/",
-// //   {
-// //     useUnifiedTopology: true,
-// //   }
-// // );
-
-// // 6. 定义 Todo 模型
-// // const Todo = mongoose.model("Todo", {
-// //   task: String,
-// //   completed: Boolean,
-// // });
-
-// // 7. 创建Apollo服务器
-// const server = new ApolloServer({ typeDefs, resolvers, cache: "bounded" });
-
-// // 8. 启动Apollo服务器并将中间件添加到Express应用
-// async function startServer() {
-//   await server.start();
-//   server.applyMiddleware({ app });
-// }
-
-// // 9. 启动Express服务器
-// const PORT = process.env.PORT || 3000; // 使用Vercel分配的端口或者3000端口
-// startServer().then(() => {
-//   app.listen(PORT, () => {
-//     console.log(
-//       `Server running at http://localhost:${PORT}${server.graphqlPath}`
-//     );
-//   });
-// });
-
-// app.use(cors());
-
-const { ApolloServer } = require("apollo-server");
+const { ApolloServer, gql } = require("apollo-server");
 const { Query } = require("./schema/resolvers/Query");
 const { Mutation } = require("./schema/resolvers/Mutation");
 const { Author } = require("./schema/resolvers/Author");
@@ -100,11 +6,12 @@ const { Book } = require("./schema/resolvers/Book");
 const { Publish } = require("./schema/resolvers/Publish");
 const { BooksResult } = require("./schema/resolvers/BooksResult");
 const { FilterBook } = require("./schema/resolvers/FilterBook");
-
-const typeDefs = require("./schema/type");
 const mongoose = require("mongoose");
+// const typeDefs = require("./schema/type");
+// const mongoose = require("mongoose");
 require("dotenv").config();
-const uri = process.env.ATLAS_URI;
+const uri =
+  "mongodb+srv://ray10315332:GayqbQeJq5Jxh3em@cluster0.pberq7k.mongodb.net/";
 mongoose.connect(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -116,17 +23,85 @@ connection.once("open", () => {
   console.log("mogoose connect!!!");
 });
 
+// 定义GraphQL Schema
+const typeDefs = gql`
+  type Todo {
+    id: ID!
+    task: String!
+    completed: Boolean!
+  }
+
+  type Query {
+    todos: [Todo]
+    todo(id: ID!): Todo
+  }
+
+  type Mutation {
+    addTodo(task: String!): Todo
+    updateTodo(id: ID!, task: String!, completed: Boolean!): Todo
+    deleteTodo(id: ID!): Todo
+  }
+`;
+
+// 4. 提供解析函数
+const resolvers = {
+  Query: {
+    todos: async () => {
+      const todos = await Todo.find();
+      return todos;
+    },
+    todo: async (_, { id }) => {
+      const todo = await Todo.findById(id);
+      return todo;
+    },
+  },
+  Mutation: {
+    addTodo: async (_, { task }) => {
+      const todo = new Todo({ task, completed: false });
+      await todo.save();
+      return todo;
+    },
+    updateTodo: async (_, { id, task, completed }) => {
+      const todo = await Todo.findByIdAndUpdate(
+        id,
+        { task, completed },
+        { new: true }
+      );
+      return todo;
+    },
+    deleteTodo: async (_, { id }) => {
+      const todo = await Todo.findByIdAndDelete(id);
+      return todo;
+    },
+  },
+};
+
+// 5. 连接到 MongoDB 数据库
+mongoose.connect(
+  "mongodb+srv://ray10315332:GayqbQeJq5Jxh3em@cluster0.pberq7k.mongodb.net/",
+  {
+    useUnifiedTopology: true,
+  }
+);
+
+// 6. 定义 Todo 模型
+const Todo = mongoose.model("Todo", {
+  task: String,
+  completed: Boolean,
+});
+
 const server = new ApolloServer({
   typeDefs,
-  resolvers: {
-    Query,
-    Mutation,
-    Author,
-    Book,
-    Publish,
-    FilterBook,
-    BooksResult,
-  },
+  resolvers,
+  // resolvers: {
+  //   Query,
+  //   Mutation,
+  //   Author,
+  //   Book,
+  //   Publish,
+  //   FilterBook,
+  //   BooksResult,
+  // },
   persistedQueries: false,
   playground: true,
 });
