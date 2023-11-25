@@ -61,7 +61,6 @@ const resolvers = {
 mongoose.connect(
   "mongodb+srv://ray10315332:GayqbQeJq5Jxh3em@cluster0.pberq7k.mongodb.net/",
   {
-    useNewUrlParser: true,
     useUnifiedTopology: true,
   }
 );
@@ -73,7 +72,7 @@ const Todo = mongoose.model("Todo", {
 });
 
 // 7. 创建Apollo服务器
-const server = new ApolloServer({ typeDefs, resolvers });
+const server = new ApolloServer({ typeDefs, resolvers, cache: "bounded" });
 
 // 8. 启动Apollo服务器并将中间件添加到Express应用
 async function startServer() {
